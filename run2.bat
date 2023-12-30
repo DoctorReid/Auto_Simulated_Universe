@@ -1,6 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 chcp 65001
+cd /D %~dp0
 
 set python=python
 set pip=pip
@@ -8,13 +9,6 @@ set env_path=.\.env
 set venv_path=!env_path!\venv
 
 echo 安装启动途中 如遇杀毒软件提醒 选择信任即可
-
-rem 检查 系统是否已安装 Python 3.11
-set sys_py311=0
-where python >nul 2>&1 && python --version 2>nul | findstr /i "3.11" >nul && set sys_py311=1
-if !sys_py311! == 1 (
-    goto py311-install-done
-)
 
 rem 检查 本地是否已安装 Python 3.11
 set local_py_path=!env_path!\python3.11
@@ -61,9 +55,7 @@ set local_py311=1
 echo 当前使用Python版本 & !python! --version
 
 rem 检查是否安装pip
-if !sys_py311! == 0 (
-    set pip=!local_py_path!\Scripts\pip.exe
-)
+set pip=!local_py_path!\Scripts\pip.exe
 set with_pip=0
 !python! -m pip --version >nul 2>nul && set with_pip=1
 if !with_pip! == 1 (
@@ -140,7 +132,7 @@ echo 依赖包已准备
 
 echo 准备启动
 set PATH=%path%;.\.env\venv\Scripts\
-python gui.py --find=1
+!python! gui.py --find=1
 
 endlocal
 pause
